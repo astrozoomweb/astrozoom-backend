@@ -63,11 +63,18 @@ app.post("/rudraksha", async (req, res) => {
       apiData.response?.mukhi_for_disease_cure?.[0] ||
       5;
 
-    res.json({
-      success: true,
-      mukhi: mukhi,
-      rudraksha: `${mukhi} Mukhi Rudraksha`
-    });
+    app.all("/rudraksha", async (req, res) => {
+  console.log("🔥 PROXY HIT");
+
+  const body = req.body || {};
+  console.log("BODY:", body);
+
+  res.json({
+    success: true,
+    mukhi: 5,
+    rudraksha: "5 Mukhi Rudraksha"
+  });
+});
 
   } catch (error) {
     console.log("STEP ERROR HIT");
