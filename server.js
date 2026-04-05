@@ -10,7 +10,7 @@ const app = express(); // 🔥 THIS WAS MISSING
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-// app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 
 app.post("/rudraksha", async (req, res) => {
   console.log("STEP 1: API HIT");
@@ -57,17 +57,17 @@ app.post("/rudraksha", async (req, res) => {
 
     const apiData = astroResponse.data;
 
-const mukhi =
-  apiData.response?.mukhi_for_money?.[0] ||
-  apiData.response?.mukhi_for_health?.[0] ||
-  apiData.response?.mukhi_for_disease_cure?.[0] ||
-  5;
+    const mukhi =
+      apiData.response?.mukhi_for_money?.[0] ||
+      apiData.response?.mukhi_for_health?.[0] ||
+      apiData.response?.mukhi_for_disease_cure?.[0] ||
+      5;
 
-res.json({
-  success: true,
-  mukhi: mukhi,
-  rudraksha: `${mukhi} Mukhi Rudraksha`
-});
+    res.json({
+      success: true,
+      mukhi: mukhi,
+      rudraksha: `${mukhi} Mukhi Rudraksha`
+    });
 
   } catch (error) {
     console.log("STEP ERROR HIT");
