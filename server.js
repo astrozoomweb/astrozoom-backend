@@ -10,7 +10,7 @@ const app = express(); // 🔥 THIS WAS MISSING
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(cors());
+// app.use(cors());
 
 app.post("/rudraksha", async (req, res) => {
   console.log("STEP 1: API HIT");
