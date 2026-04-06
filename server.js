@@ -122,15 +122,17 @@ app.all("/gemstone", async (req, res) => {
 
     const data = response.data;
 
-    const gem =
-      data.response?.life_stone ||
-      data.response?.lucky_stone ||
-      data.response?.benefic_stone ||
-      "Yellow Sapphire";
+    let gem = "Yellow Sapphire";
+
+    // ✅ Correct key from your API
+    if (data.response?.name) {
+      gem = data.response.name;
+    }
 
     res.json({
       success: true,
-      gemstone: gem
+      gemstone: data.response?.name || "Yellow Sapphire",
+      gem_key: data.response?.gem || "yellow_sapphire"
     });
 
   } catch (error) {
