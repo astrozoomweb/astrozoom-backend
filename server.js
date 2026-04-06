@@ -24,7 +24,7 @@ app.post("/rudraksha", async (req, res) => {
     const date = new Date(dob);
     console.log("STEP 3: DATE OBJECT", date);
 
-    const formattedDob = `${date.getDate().toString().padStart(2,'0')}/${(date.getMonth()+1).toString().padStart(2,'0')}/${date.getFullYear()}`;
+    const formattedDob = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
 
     console.log("STEP 4: FORMATTED DOB", formattedDob);
 
@@ -57,17 +57,17 @@ app.post("/rudraksha", async (req, res) => {
 
     const apiData = astroResponse.data;
 
-const mukhi =
-  apiData.response?.mukhi_for_money?.[0] ||
-  apiData.response?.mukhi_for_health?.[0] ||
-  apiData.response?.mukhi_for_disease_cure?.[0] ||
-  5;
+    const mukhi =
+      apiData.response?.mukhi_for_money?.[0] ||
+      apiData.response?.mukhi_for_health?.[0] ||
+      apiData.response?.mukhi_for_disease_cure?.[0] ||
+      5;
 
-res.json({
-  success: true,
-  mukhi: mukhi,
-  rudraksha: `${mukhi} Mukhi Rudraksha`
-});
+    res.json({
+      success: true,
+      mukhi: mukhi,
+      rudraksha: `${mukhi} Mukhi Rudraksha`
+    });
 
   } catch (error) {
     console.log("STEP ERROR HIT");
@@ -82,6 +82,63 @@ res.json({
     res.status(500).json({
       success: false,
       debug: error.response?.data || error.message
+    });
+  }
+});
+
+app.all("/gemstone", async (req, res) => {
+  console.log("💎 GEMSTONE HIT");
+
+  try {
+    const body = req.body || req.query || {};
+    const { dob, tob, pob } = body;
+
+    console.log("INPUT:", body);
+
+    // Format DOB
+    const date = new Date(dob);
+    const formattedDob = `${date.getDate().toString().padStart(2,'0')}/${(date.getMonth()+1).toString().padStart(2,'0')}/${date.getFullYear()}`;
+
+    const lat = 26.24;
+    const lon = 73.02;
+
+    // Call Vedic API
+    const response = await axios.get(
+      "https://api.vedicastroapi.com/v3-json/extended-horoscope/gem-suggestion",
+      {
+        params: {
+          api_key: process.env.ASTRO_API_KEY,
+          dob: formattedDob,
+          tob: tob,
+          lat: lat,
+          lon: lon,
+          tz: 5.5,
+          lang: "en"
+        }
+      }
+    );
+
+    console.log("GEM API RESPONSE:", response.data);
+
+    const data = response.data;
+
+    const gem =
+      data.response?.life_stone ||
+      data.response?.lucky_stone ||
+      data.response?.benefic_stone ||
+      "Yellow Sapphire";
+
+    res.json({
+      success: true,
+      gemstone: gem
+    });
+
+  } catch (error) {
+    console.error("GEM ERROR:", error.message);
+
+    res.status(500).json({
+      success: false,
+      error: error.message
     });
   }
 });
